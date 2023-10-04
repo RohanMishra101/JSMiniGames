@@ -7,3 +7,7 @@ function trafficLight(){
 function target(){
     window.location.href = "Day2/Assignment2/index.html";
 }
+
+function topDown(){
+    window.location.href = "TopDownGame/topDownShooter.html";
+}

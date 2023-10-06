@@ -1,5 +1,5 @@
 
-alert("The game is still under CONSTRUCTION. You can sillt try it, if you found it laggy then My Brother/Sister its time to upgrade you PC cause it works on mine!!")
+alert("The game is still under CONSTRUCTION. You can sillt try it, if you found it laggy then My Brother/Sister its time to upgrade you PC cause it works on mine!!");
 
 let canvas = document.getElementById("canvas");
 
@@ -99,9 +99,7 @@ document.body.addEventListener("mousemove",(e)=>{
     // console.log("X : ", mousePosX," Y : ",mousePosY);
 });
 
-// canvas.addEventListener("mousemove",()=>{
-//     angle = rotatePlayer();
-// });
+
 
 // Initialize an object to store the state of the keys
 const keys = {};
@@ -150,8 +148,3 @@ function renderGame(){
 }
 
 gameLoop();
-
-
-
-
-

@@ -1,5 +1,5 @@
 
-alert("The game is still under CONSTRUCTION. You can sillt try it, if you found it laggy then My Brother/Sister its time to upgrade you PC cause it works on mine!!");
+// alert("The game is still under CONSTRUCTION. You can sillt try it, if you found it laggy then My Brother/Sister its time to upgrade you PC cause it works on mine!!");
 
 let canvas = document.getElementById("canvas");
 
@@ -7,32 +7,6 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let context = canvas.getContext("2d");
-
-//Screen Center Point
-let centerPointX = canvas.width/2;
-let centerPointY = canvas.height/2;
-
-// console.log("X : ", centerPointX," Y : ",centerPointY);
-
-//Mouse Position on the body
-let mousePosX;
-let mousePosY;
-let angle;
-
-//Player
-
-let player = {
-    posX: centerPointX,
-    posY: centerPointY,
-    health: 100,
-    speed: 3
-}
-
-// 90 degrees in anti-clockwise direction
-const initialOffsetAngle = Math.PI / 2; 
-
-
-
 
 //Creating a new layer for player
 let playerCanvas = document.createElement("canvas");
@@ -50,46 +24,96 @@ playerCanvas.style.zIndex = "100";
 
 document.body.appendChild(playerCanvas);
 
+//Screen Center Point
+let centerPointX = canvas.width/2;
+let centerPointY = canvas.height/2;
 
+// console.log("X : ", centerPointX," Y : ",centerPointY);
 
+//Mouse Position on the body
+let mousePosX;
+let mousePosY;
+let angle;
 
+// 90 degrees in clockwise direction
+const initialOffsetAngle = Math.PI / 2; 
 
+//Player
+class Player{
+    constructor(){
+        this.posX = centerPointX;
+        this.posY = centerPointY;
+        this.health = 100;
+        this.speed = 3;
+        this.angle;
+    }
+    draw(){
+        // Set shadow properties for the glow effect
+        playerContext.shadowColor = "White"; // Color of the glow
+        playerContext.shadowBlur = 7; // Blur radius of the glow
+        playerContext.shadowOffsetX = 0; // Horizontal offset of the glow
+        playerContext.shadowOffsetY = 0; // Vertical offset of the glow
 
-function initiatePlayer(){
-    // Set shadow properties for the glow effect
-    playerContext.shadowColor = "White"; // Color of the glow
-    playerContext.shadowBlur = 7; // Blur radius of the glow
-    playerContext.shadowOffsetX = 0; // Horizontal offset of the glow
-    playerContext.shadowOffsetY = 0; // Vertical offset of the glow
+        playerContext.clearRect(0,0,canvas.width,canvas.height);
 
+        playerContext.save();
+        playerContext.translate(this.posX,this.posY);
+        playerContext.rotate(this.angle + initialOffsetAngle);
+        playerContext.beginPath();
+        playerContext.fillStyle = "White";
+        playerContext.rect(-7.5,-45,15,80);
+        playerContext.fill();
 
-    playerContext.clearRect(0,0,canvas.width,canvas.height);
+        playerContext.beginPath();
+        playerContext.strokeStyle = "white";
+        playerContext.lineWidth = 4;
+        playerContext.fillStyle = "Red";
+        playerContext.arc(0,0,35,0,360);
+        playerContext.fill();
+        playerContext.stroke();
 
+        playerContext.restore();
+    }
 
-    playerContext.save();
-    playerContext.translate(player.posX,player.posY);
-    playerContext.rotate(angle + initialOffsetAngle);
-    playerContext.beginPath();
-    playerContext.fillStyle = "White";
-    playerContext.rect(-7.5,-45,15,80);
-    playerContext.fill();
+    rotate(){
+        const deltaX = mousePosX - this.posX;
+        const deltaY = mousePosY - this.posY;
+        this.angle = Math.atan2(deltaY, deltaX);
 
-    playerContext.beginPath();
-    playerContext.strokeStyle = "white";
-    playerContext.lineWidth = 4;
-    playerContext.fillStyle = "Red";
-    playerContext.arc(0,0,35,0,360);
-    playerContext.fill();
-    playerContext.stroke();
+    }
 
-    playerContext.restore();
+    move(){
+        if (keys["KeyW"]) {
+            player.posY -= player.speed;
+        }
+        if (keys["KeyA"]) {
+            player.posX -= player.speed;
+        }
+        if (keys["KeyS"]) {
+            player.posY += player.speed;
+        }
+        if (keys["KeyD"]) {
+            player.posX += player.speed;
+        }
+    }
 }
 
-function rotatePlayer(){
-    const deltaX = mousePosX - player.posX;
-    const deltaY = mousePosY - player.posY;
-    const angle = Math.atan2(deltaY, deltaX);
-    return angle;  
+const player = new Player();
+
+
+
+//Bullet
+class Bullet{
+    constructor() {
+        this.x = 100;
+        this.y = 100;
+        this.radiusX = 100;
+        this.radiusY = 50;
+        this.rotation = 0;
+        this.fireRate = 1;
+        this.damage = 40;
+    }
+    
 }
 
 document.body.addEventListener("mousemove",(e)=>{
@@ -98,8 +122,6 @@ document.body.addEventListener("mousemove",(e)=>{
 
     // console.log("X : ", mousePosX," Y : ",mousePosY);
 });
-
-
 
 // Initialize an object to store the state of the keys
 const keys = {};
@@ -113,38 +135,17 @@ document.addEventListener("keyup", (e) => {
     keys[e.code] = false;
 });
 
-
 function gameLoop(){
     updateGame();
-
-    renderGame();
 
     requestAnimationFrame(gameLoop);
 }
 
 function updateGame(){
-    playerMovement();
 
-    angle = rotatePlayer();
-}
-function playerMovement(){
-    if (keys["KeyW"]) {
-        player.posY -= player.speed;
-    }
-    if (keys["KeyA"]) {
-        player.posX -= player.speed;
-    }
-    if (keys["KeyS"]) {
-        player.posY += player.speed;
-    }
-    if (keys["KeyD"]) {
-        player.posX += player.speed;
-    }
-}
-
-function renderGame(){
-    //Initiallizing a player
-    initiatePlayer();
+    player.draw();
+    player.rotate();
+    player.move();
 }
 
 gameLoop();

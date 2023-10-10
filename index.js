@@ -11,3 +11,7 @@ function target(){
 function topDown(){
     window.location.href = "TopDownGame/topDownShooter.html";
 }
+
+function ballCollision(){
+    window.location.href = "Ball Collision/index.html";
+}
